@@ -41,5 +41,5 @@ jobs:
       - name: Upload PDF Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ARAVINDH_SIVALINGAM_${{ upper(matrix.folder) }}
+          name: ARAVINDH_SIVALINGAM_${{ toUpper(matrix.folder) }}
           path: ${{ matrix.folder }}/resume.pdf
