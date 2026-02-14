@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  build_resumes:
+  build:
     name: Build ${{ matrix.country }}
     runs-on: ubuntu-latest
     strategy:
@@ -41,23 +41,30 @@ jobs:
         run: |
           latexmk -pdf -interaction=nonstopmode -halt-on-error resume.tex
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Upload PDF Artifact
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: resume-${{ github.run_id }}-${{ matrix.folder }}
-          release_name: Resume - ${{ github.run_number }} - ${{ matrix.country }}
-          body: Generated resume PDF for ${{ matrix.country }} by workflow run ${{ github.run_id }}
-          draft: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: ARAVINDH_SIVALINGAM_${{ matrix.country }}
+          path: ${{ matrix.folder }}/resume.pdf
 
-      - name: Upload Release Asset (PDF)
-        uses: actions/upload-release-asset@v1
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ matrix.folder }}/resume.pdf
-          asset_name: ARAVINDH_SIVALINGAM_${{ matrix.country }}.pdf
-          asset_content_type: application/pdf
+          path: artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: resume-${{ github.run_id }}
+          name: Resume - ${{ github.run_number }}
+          body: Generated resume PDFs by workflow run ${{ github.run_id }}
+          files: |
+            artifacts/**/*.pdf
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
