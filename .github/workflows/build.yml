@@ -3,9 +3,6 @@ name: Build Resume PDFs
 on:
   push:
     branches: [ "master", "main" ]
-    paths:
-      - "**/*.tex"
-      - "**/*.cls"
   pull_request:
     branches: [ "master", "main" ]
 
