@@ -8,6 +8,7 @@ on:
 
 jobs:
   build_resumes:
+    name: Build ${{ matrix.country }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
