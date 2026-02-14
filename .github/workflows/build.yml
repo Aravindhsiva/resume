@@ -3,9 +3,9 @@ name: Build Resume PDF (Manual LaTeX Build)
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - "**.tex"
-      - "**.cls"
+    # paths:
+    #   - "**.tex"
+    #   - "**.cls"
   pull_request:
     branches: [ "main" ]
 
