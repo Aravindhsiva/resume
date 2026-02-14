@@ -1,17 +1,23 @@
-name: Build Resume PDF (Manual LaTeX Build)
+name: Build Resume PDFs
 
 on:
   push:
     branches: [ "master", "main" ]
-    # paths:
-    #   - "**.tex"
-    #   - "**.cls"
+    paths:
+      - "**/*.tex"
+      - "**/*.cls"
   pull_request:
     branches: [ "master", "main" ]
 
 jobs:
-  build_resume:
+  build_resumes:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - folder: uk
+          - folder: luxembourg
 
     steps:
       - name: Checkout Repository
@@ -28,15 +34,12 @@ jobs:
             latexmk
 
       - name: Compile Resume
+        working-directory: ${{ matrix.folder }}
         run: |
           latexmk -pdf -interaction=nonstopmode -halt-on-error resume.tex
-
-      - name: Verify Output
-        run: |
-          ls -lh resume.pdf
 
       - name: Upload PDF Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: resume-pdf
-          path: resume.pdf
+          name: resume-${{ matrix.folder }}
+          path: ${{ matrix.folder }}/resume.pdf
