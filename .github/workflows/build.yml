@@ -17,7 +17,9 @@ jobs:
       matrix:
         include:
           - folder: uk
+            country: UK
           - folder: luxembourg
+            country: LUXEMBOURG
 
     steps:
       - name: Checkout Repository
@@ -41,5 +43,5 @@ jobs:
       - name: Upload PDF Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ARAVINDH_SIVALINGAM_${{ toUpper(matrix.folder) }}
+          name: ARAVINDH_SIVALINGAM_${{ matrix.country }}
           path: ${{ matrix.folder }}/resume.pdf
