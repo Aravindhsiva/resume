@@ -1,4 +1,3 @@
-
 # Resume (LaTeX)
 
 This repository contains a LaTeX resume template and class file to generate a PDF resume.
@@ -68,4 +67,18 @@ If you want, I can also:
 - create a minimal CI workflow to build the PDF on push,
 - or convert the template for Overleaf compatibility.
 
+## CI / GitHub Actions
+
+This repository includes a GitHub Actions workflow at `.github/workflows/build.yml` that compiles the LaTeX source and uploads the generated PDF as a release asset (raw `.pdf`) instead of a zipped artifact.
+
+- What the workflow does: builds `resume.pdf`, creates and publishes a GitHub Release for each run, then uploads the PDF as an asset named `ARAVINDH_SIVALINGAM_<COUNTRY>.pdf`.
+- Where to find the PDF: open the repository on GitHub → Releases → find the release for the workflow run (tag contains the run id) → download the PDF from the Assets list.
+
+If you prefer a different behavior, here are alternatives I can implement:
+
+- Upload the PDF as an unzipped artifact (using `actions/upload-artifact`) instead of a release asset.
+- Only create releases on demand (for example on `workflow_dispatch` or when pushing a specific tag), leaving PR and branch builds as artifacts.
+- Publish the PDF to GitHub Pages or an external storage (S3) for direct public URLs.
+
+Tell me which option you'd like next.
 Tell me which option you'd like next.

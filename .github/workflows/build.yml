@@ -38,8 +38,23 @@ jobs:
         run: |
           latexmk -pdf -interaction=nonstopmode -halt-on-error resume.tex
 
-      - name: Upload PDF Artifact
-        uses: actions/upload-artifact@v4
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         with:
-          name: ARAVINDH_SIVALINGAM_${{ matrix.country }}
-          path: ${{ matrix.folder }}/resume.pdf
+          tag_name: resume-${{ github.run_id }}-${{ matrix.folder }}
+          release_name: Resume - ${{ github.run_number }} - ${{ matrix.country }}
+          body: Generated resume PDF for ${{ matrix.country }} by workflow run ${{ github.run_id }}
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset (PDF)
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ matrix.folder }}/resume.pdf
+          asset_name: ARAVINDH_SIVALINGAM_${{ matrix.country }}.pdf
+          asset_content_type: application/pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
