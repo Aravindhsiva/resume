@@ -58,6 +58,12 @@ jobs:
         with:
           path: artifacts
 
+      - name: Rename PDFs
+        run: |
+          mv artifacts/ARAVINDH_SIVALINGAM_UK/resume.pdf artifacts/ARAVINDH_SIVALINGAM_UK.pdf
+          mv artifacts/ARAVINDH_SIVALINGAM_LUXEMBOURG/resume.pdf artifacts/ARAVINDH_SIVALINGAM_LUXEMBOURG.pdf
+          rm -rf artifacts/ARAVINDH_SIVALINGAM_UK artifacts/ARAVINDH_SIVALINGAM_LUXEMBOURG
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
