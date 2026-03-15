@@ -21,6 +21,10 @@ jobs:
             country: UK
           - folder: luxembourg
             country: LUXEMBOURG
+          - folder: canada
+            country: CANADA
+          - folder: unitedstates
+            country: UNITEDSTATES
 
     steps:
       - name: Checkout Repository
@@ -62,7 +66,9 @@ jobs:
         run: |
           mv artifacts/ARAVINDH_SIVALINGAM_UK/resume.pdf artifacts/ARAVINDH_SIVALINGAM_UK.pdf
           mv artifacts/ARAVINDH_SIVALINGAM_LUXEMBOURG/resume.pdf artifacts/ARAVINDH_SIVALINGAM_LUXEMBOURG.pdf
-          rm -rf artifacts/ARAVINDH_SIVALINGAM_UK artifacts/ARAVINDH_SIVALINGAM_LUXEMBOURG
+          mv artifacts/ARAVINDH_SIVALINGAM_CANADA/resume.pdf artifacts/ARAVINDH_SIVALINGAM_CANADA.pdf
+          mv artifacts/ARAVINDH_SIVALINGAM_UNITEDSTATES/resume.pdf artifacts/ARAVINDH_SIVALINGAM_UNITEDSTATES.pdf
+          rm -rf artifacts/ARAVINDH_SIVALINGAM_UK artifacts/ARAVINDH_SIVALINGAM_LUXEMBOURG artifacts/ARAVINDH_SIVALINGAM_CANADA artifacts/ARAVINDH_SIVALINGAM_UNITEDSTATES
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
