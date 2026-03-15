@@ -11,20 +11,8 @@ permissions:
 
 jobs:
   build:
-    name: Build ${{ matrix.country }}
+    name: Build Resumes
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - folder: uk
-            country: UK
-          - folder: luxembourg
-            country: LUXEMBOURG
-          - folder: canada
-            country: CANADA
-          - folder: unitedstates
-            country: UNITEDSTATES
 
     steps:
       - name: Checkout Repository
@@ -40,16 +28,21 @@ jobs:
             texlive-fonts-recommended \
             latexmk
 
-      - name: Compile Resume
-        working-directory: ${{ matrix.folder }}
+      - name: Compile and Collect Resumes
         run: |
-          latexmk -pdf -interaction=nonstopmode -halt-on-error resume.tex
+          mkdir -p artifacts
+          for dir in uk luxembourg canada unitedstates; do
+            echo "Building $dir..."
+            (cd "$dir" && latexmk -pdf -interaction=nonstopmode -halt-on-error resume.tex)
+            country=$(echo "$dir" | tr '[:lower:]' '[:upper:]')
+            cp "$dir/resume.pdf" "artifacts/ARAVINDH_SIVALINGAM_${country}.pdf"
+          done
 
-      - name: Upload PDF Artifact
+      - name: Upload PDF Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ARAVINDH_SIVALINGAM_${{ matrix.country }}
-          path: ${{ matrix.folder }}/resume.pdf
+          name: resumes
+          path: artifacts/*.pdf
 
   release:
     name: Create Release
@@ -57,18 +50,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download all artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
+          name: resumes
           path: artifacts
-
-      - name: Rename PDFs
-        run: |
-          mv artifacts/ARAVINDH_SIVALINGAM_UK/resume.pdf artifacts/ARAVINDH_SIVALINGAM_UK.pdf
-          mv artifacts/ARAVINDH_SIVALINGAM_LUXEMBOURG/resume.pdf artifacts/ARAVINDH_SIVALINGAM_LUXEMBOURG.pdf
-          mv artifacts/ARAVINDH_SIVALINGAM_CANADA/resume.pdf artifacts/ARAVINDH_SIVALINGAM_CANADA.pdf
-          mv artifacts/ARAVINDH_SIVALINGAM_UNITEDSTATES/resume.pdf artifacts/ARAVINDH_SIVALINGAM_UNITEDSTATES.pdf
-          rm -rf artifacts/ARAVINDH_SIVALINGAM_UK artifacts/ARAVINDH_SIVALINGAM_LUXEMBOURG artifacts/ARAVINDH_SIVALINGAM_CANADA artifacts/ARAVINDH_SIVALINGAM_UNITEDSTATES
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -78,6 +64,6 @@ jobs:
           body: Generated resume PDFs by workflow run ${{ github.run_id }}
           source: ""
           files: |
-            artifacts/**/*.pdf
+            artifacts/*.pdf
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
