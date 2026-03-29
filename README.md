@@ -23,14 +23,11 @@ Open `http://localhost:3000`.
 
 ### LLM options (cost-friendly)
 
-By default, the API uses OpenRouter (requires an API key).
-
-OpenRouter (default):
+The API uses OpenRouter (requires an API key).
 
 ```bash
 cp .env.example .env.local
 # set OPENROUTER_API_KEY in .env.local
-# set APP_BASIC_AUTH in .env.local (recommended before exposing publicly)
 OPENROUTER_API_KEY=... npm run dev
 ```
 
@@ -38,23 +35,19 @@ Use the free model you requested (default):
 
 `OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free`
 
-Offline (no external calls):
-
-```bash
-LLM_PROVIDER=mock npm run dev
-```
-
-Local open-source LLM via Ollama:
-
-```bash
-LLM_PROVIDER=ollama OLLAMA_MODEL=llama3.1 npm run dev
-```
-
 ## Contents
 
 - `templates/<country>/resume.tex` — Country-specific LaTeX resume source.
 - `templates/<country>/resume.cls` — LaTeX class providing layout and styling.
 - `app/` + `lib/` — Next.js UI + API.
+
+## Deploy (AWS Amplify)
+
+For a simple password-protected public endpoint on Amplify, use:
+
+- AWS Amplify Console → Hosting → Access control
+
+This protects both the UI and `/api/*` endpoints at the CDN layer (recommended).
 
 ## Requirements
 
