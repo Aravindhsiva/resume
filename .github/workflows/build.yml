@@ -33,9 +33,9 @@ jobs:
           mkdir -p artifacts
           for dir in uk luxembourg canada unitedstates; do
             echo "Building $dir..."
-            (cd "$dir" && latexmk -pdf -interaction=nonstopmode -halt-on-error resume.tex)
+            (cd "templates/$dir" && latexmk -pdf -interaction=nonstopmode -halt-on-error resume.tex)
             country=$(echo "$dir" | tr '[:lower:]' '[:upper:]')
-            cp "$dir/resume.pdf" "artifacts/ARAVINDH_SIVALINGAM_${country}.pdf"
+            cp "templates/$dir/resume.pdf" "artifacts/ARAVINDH_SIVALINGAM_${country}.pdf"
           done
 
       - name: Upload PDF Artifacts
@@ -67,3 +67,4 @@ jobs:
             artifacts/*.pdf
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

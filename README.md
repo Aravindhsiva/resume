@@ -2,10 +2,59 @@
 
 This repository contains a LaTeX resume template and class file to generate a PDF resume.
 
+## Web UI (Next.js)
+
+There is a simple Next.js app at the repository root that:
+
+- accepts a job description (large textarea) + target country template
+- calls a local API route (`/api/generate`)
+- returns a tailored **LaTeX draft** by updating the *Professional Summary* and *Technical Skills* sections while keeping your existing *Experience* and *Education* sections
+
+Templates live under `templates/<country>/resume.tex`.
+
+### Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+### LLM options (cost-friendly)
+
+By default, the API uses OpenRouter (requires an API key).
+
+OpenRouter (default):
+
+```bash
+cp .env.example .env.local
+# set OPENROUTER_API_KEY in .env.local
+# set APP_BASIC_AUTH in .env.local (recommended before exposing publicly)
+OPENROUTER_API_KEY=... npm run dev
+```
+
+Use the free model you requested (default):
+
+`OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free`
+
+Offline (no external calls):
+
+```bash
+LLM_PROVIDER=mock npm run dev
+```
+
+Local open-source LLM via Ollama:
+
+```bash
+LLM_PROVIDER=ollama OLLAMA_MODEL=llama3.1 npm run dev
+```
+
 ## Contents
 
-- `resume.tex` — Example resume source using the custom class.
-- `resume.cls` — Document class providing layout and styling for the resume.
+- `templates/<country>/resume.tex` — Country-specific LaTeX resume source.
+- `templates/<country>/resume.cls` — LaTeX class providing layout and styling.
+- `app/` + `lib/` — Next.js UI + API.
 
 ## Requirements
 
@@ -21,24 +70,24 @@ From the repository root, run one of the following commands:
 Using `latexmk` (recommended):
 
 ```bash
-latexmk -pdf resume.tex
+latexmk -pdf templates/unitedstates/resume.tex
 ```
 
 Using `pdflatex` (two or three passes may be required):
 
 ```bash
-pdflatex resume.tex
+pdflatex templates/unitedstates/resume.tex
 bibtex resume (if you use bibliography)
-pdflatex resume.tex
-pdflatex resume.tex
+pdflatex templates/unitedstates/resume.tex
+pdflatex templates/unitedstates/resume.tex
 ```
 
-This will produce `resume.pdf` in the same directory.
+This will produce `resume.pdf` in the same directory as the selected country template.
 
 ## Customize
 
-- Edit `resume.tex` to change your name, sections, content, and contact details.
-- Edit `resume.cls` to modify layout, margins, fonts, or section styling.
+- Edit `templates/<country>/resume.tex` to change your name, sections, content, and contact details.
+- Edit `templates/<country>/resume.cls` to modify layout, margins, fonts, or section styling.
 - If you prefer a different engine (XeLaTeX or LuaLaTeX) for system fonts, replace the compile command:
 
 ```bash
